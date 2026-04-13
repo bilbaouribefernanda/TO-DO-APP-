@@ -1,7 +1,8 @@
 {
-  "name": "todo-vercel",
-  "version": "1.0.0",
-  "dependencies": {
-    "pg": "^8.11.0"
+  "functions": {
+    "api/tasks.js": {
+      "memory": 128,
+      "maxDuration": 10
+    }
   }
 }
