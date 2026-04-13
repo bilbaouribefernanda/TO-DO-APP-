@@ -3,403 +3,546 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mi lista de tareas</title>
+<title>Mis Tareas ✨</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root {
-    --bg: #f5f4f0;
-    --surface: #ffffff;
-    --border: rgba(0,0,0,0.12);
-    --text: #1a1a1a;
-    --text-muted: #6b6b6b;
-    --todo-bg: #eeedfe;
-    --todo-accent: #534ab7;
-    --todo-text: #3c3489;
-    --progress-bg: #faeeda;
-    --progress-accent: #854f0b;
-    --progress-text: #633806;
-    --done-bg: #eaf3de;
-    --done-accent: #3b6d11;
-    --done-text: #27500a;
-    --radius: 10px;
-    --radius-sm: 6px;
-    --shadow: 0 1px 3px rgba(0,0,0,0.08);
-  }
+:root {
+  --bg:        #fff0f5;
+  --surface:   #ffffff;
+  --border:    #f4b8ce;
+  --text:      #2d0a1a;
+  --text2:     #8a3a58;
+  --text3:     #c490a8;
+  --pink:      #e0186a;
+  --pink-deep: #b50052;
+  --pink-soft: #fddceb;
+  --hot:       #ff2d78;
+  --gold:      #c8890a;
+  --gold-bg:   #fff3d0;
+  --done-c:    #1a7a3f;
+  --done-bg:   #d6f5e3;
+  --r: 20px;
+  --r-sm: 12px;
+  --r-pill: 100px;
+}
 
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #1a1a1a;
-      --surface: #252525;
-      --border: rgba(255,255,255,0.1);
-      --text: #e8e6e0;
-      --text-muted: #888;
-      --todo-bg: #26215c;
-      --todo-accent: #afa9ec;
-      --todo-text: #cecbf6;
-      --progress-bg: #412402;
-      --progress-accent: #fac775;
-      --progress-text: #faeeda;
-      --done-bg: #173404;
-      --done-accent: #97c459;
-      --done-text: #c0dd97;
-    }
-  }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
 
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    padding: 2rem 1rem;
-  }
+/* sparkle confetti background */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(circle, #f48ab5 1.5px, transparent 1.5px),
+    radial-gradient(circle, #fdd5e8 1px, transparent 1px),
+    radial-gradient(circle, #fbc9dc 1px, transparent 1px);
+  background-size: 60px 60px, 40px 40px, 90px 90px;
+  background-position: 0 0, 20px 30px, 50px 10px;
+  opacity: .25;
+  pointer-events: none;
+  z-index: 0;
+}
 
-  header {
-    text-align: center;
-    margin-bottom: 2rem;
-  }
+.wrap { position: relative; z-index: 1; }
 
-  header h1 {
-    font-size: 1.6rem;
-    font-weight: 600;
-    letter-spacing: -0.3px;
-  }
+/* ── Header ── */
+header {
+  text-align: center;
+  padding: 56px 24px 40px;
+}
 
-  header p {
-    font-size: 0.875rem;
-    color: var(--text-muted);
-    margin-top: 4px;
-  }
+.sparkles {
+  font-size: 22px;
+  letter-spacing: 8px;
+  display: block;
+  margin-bottom: 12px;
+  color: var(--pink);
+}
 
-  .add-form {
-    display: flex;
-    gap: 8px;
-    max-width: 560px;
-    margin: 0 auto 2.5rem;
-  }
+header h1 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(32px, 6vw, 52px);
+  font-weight: 700;
+  color: var(--pink);
+  letter-spacing: -0.5px;
+  line-height: 1.15;
+}
 
-  .add-form input {
-    flex: 1;
-    padding: 10px 14px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    background: var(--surface);
-    color: var(--text);
-    font-size: 0.9rem;
-    outline: none;
-    transition: border-color 0.15s;
-  }
+header h1 em {
+  font-style: italic;
+  color: var(--text);
+}
 
-  .add-form input:focus {
-    border-color: var(--todo-accent);
-  }
+header p {
+  font-size: 13px;
+  color: var(--text3);
+  margin-top: 10px;
+  font-weight: 300;
+  letter-spacing: .4px;
+}
 
-  .add-form button {
-    padding: 10px 18px;
-    background: var(--todo-accent);
-    color: #fff;
-    border: none;
-    border-radius: var(--radius-sm);
-    font-size: 0.9rem;
-    font-weight: 500;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: opacity 0.15s;
-  }
+/* ── Add form ── */
+.add-wrap {
+  max-width: 640px;
+  margin: 0 auto 48px;
+  padding: 0 20px;
+}
 
-  .add-form button:hover { opacity: 0.88; }
+.add-card {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--r-pill);
+  padding: 6px 6px 6px 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: border-color .2s, box-shadow .2s;
+}
 
-  .board {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1.25rem;
-    max-width: 960px;
-    margin: 0 auto;
-  }
+.add-card:focus-within {
+  border-color: var(--pink);
+  box-shadow: 0 0 0 4px rgba(224,24,106,.12);
+}
 
-  .column {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1rem;
-    min-height: 300px;
-  }
+.add-card input[type="text"] {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  color: var(--text);
+  outline: none;
+  min-width: 0;
+}
 
-  .col-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-  }
+.add-card input[type="text"]::placeholder { color: var(--text3); font-weight: 300; }
 
-  .col-title {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 600;
-    font-size: 0.875rem;
-    letter-spacing: 0.3px;
-    text-transform: uppercase;
-  }
+.priority-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--pink-soft);
+  border-radius: var(--r-pill);
+  padding: 6px 12px;
+  flex-shrink: 0;
+}
 
-  .col-dot {
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-  }
+.priority-pill label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--pink);
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
 
-  .col-count {
-    font-size: 0.78rem;
-    font-weight: 500;
-    padding: 2px 8px;
-    border-radius: 20px;
-  }
+.priority-pill input[type="number"] {
+  width: 26px;
+  border: none;
+  background: transparent;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--pink-deep);
+  outline: none;
+  text-align: center;
+}
 
-  .col-todo .col-dot    { background: var(--todo-accent); }
-  .col-todo .col-count  { background: var(--todo-bg); color: var(--todo-text); }
-  .col-prog .col-dot    { background: var(--progress-accent); }
-  .col-prog .col-count  { background: var(--progress-bg); color: var(--progress-text); }
-  .col-done .col-dot    { background: var(--done-accent); }
-  .col-done .col-count  { background: var(--done-bg); color: var(--done-text); }
+.add-btn {
+  background: var(--pink);
+  color: #fff;
+  border: none;
+  border-radius: var(--r-pill);
+  padding: 12px 24px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: .3px;
+  white-space: nowrap;
+  transition: background .15s, box-shadow .15s, transform .1s;
+}
 
-  .task-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    min-height: 40px;
-  }
+.add-btn:hover { background: var(--pink-deep); box-shadow: 0 4px 16px rgba(224,24,106,.35); }
+.add-btn:active { transform: scale(.97); }
 
-  .task {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 10px 12px;
-    font-size: 0.875rem;
-    line-height: 1.4;
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    cursor: grab;
-    transition: box-shadow 0.15s, opacity 0.15s;
-    user-select: none;
-  }
+/* ── Board ── */
+.board {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px 64px;
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 20px;
+}
 
-  .task:active { cursor: grabbing; opacity: 0.7; }
-  .task.dragging { opacity: 0.4; }
-  .task.drag-over { box-shadow: 0 0 0 2px var(--todo-accent); }
+@media(max-width:720px){ .board { grid-template-columns:1fr; } }
 
-  .task-text {
-    flex: 1;
-    word-break: break-word;
-  }
+/* ── Column ── */
+.column {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+}
 
-  .task-text.done-text {
-    text-decoration: line-through;
-    color: var(--text-muted);
-  }
+.col-header {
+  padding: 20px 20px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 3px solid transparent;
+}
 
-  .task-actions {
-    display: flex;
-    gap: 4px;
-    flex-shrink: 0;
-    opacity: 0;
-    transition: opacity 0.15s;
-  }
+.col-todo .col-header { border-bottom-color: var(--pink); }
+.col-prog .col-header { border-bottom-color: var(--gold); }
+.col-done .col-header { border-bottom-color: var(--done-c); }
 
-  .task:hover .task-actions { opacity: 1; }
+.col-label {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+}
 
-  .task-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 2px 4px;
-    border-radius: 4px;
-    font-size: 13px;
-    color: var(--text-muted);
-    line-height: 1;
-    transition: background 0.12s, color 0.12s;
-  }
+.col-todo .col-label { color: var(--pink); }
+.col-prog .col-label { color: var(--gold); }
+.col-done .col-label { color: var(--done-c); }
 
-  .task-btn:hover {
-    background: var(--border);
-    color: var(--text);
-  }
+.col-count {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .5px;
+  padding: 3px 10px;
+  border-radius: var(--r-pill);
+}
 
-  .task-btn.del:hover {
-    background: #fde8e8;
-    color: #c0392b;
-  }
+.col-todo .col-count { background: var(--pink-soft); color: var(--pink-deep); }
+.col-prog .col-count { background: var(--gold-bg);   color: var(--gold); }
+.col-done .col-count { background: var(--done-bg);   color: var(--done-c); }
 
-  .move-btns {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
+.task-list {
+  padding: 14px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 100px;
+}
 
-  .empty-msg {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    text-align: center;
-    padding: 1rem 0;
-  }
+.empty-msg {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--text3);
+  padding: 16px 0 8px;
+  font-style: italic;
+}
 
-  footer {
-    text-align: center;
-    margin-top: 2.5rem;
-    font-size: 0.78rem;
-    color: var(--text-muted);
-  }
+/* ── Task card ── */
+.task {
+  border-radius: var(--r-sm);
+  padding: 13px 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: grab;
+  border: 1.5px solid transparent;
+  background: var(--bg);
+  transition: border-color .15s, box-shadow .15s;
+  user-select: none;
+}
+
+.task:hover {
+  border-color: var(--border);
+  box-shadow: 0 2px 12px rgba(224,24,106,.08);
+}
+
+.task:active { cursor: grabbing; opacity: .6; }
+.task.dragging { opacity: .3; }
+
+/* priority chip */
+.chip {
+  flex-shrink: 0;
+  height: 24px;
+  min-width: 28px;
+  padding: 0 8px;
+  border-radius: var(--r-pill);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: filter .15s, transform .1s;
+  margin-top: 1px;
+  letter-spacing: .3px;
+}
+
+.chip:hover { filter: brightness(.9); transform: scale(1.06); }
+
+.p-high { background: var(--pink);    color: #fff; }
+.p-mid  { background: var(--gold-bg); color: var(--gold); border: 1.5px solid #f0d080; }
+.p-low  { background: var(--done-bg); color: var(--done-c); }
+.p-done { background: #f0f0f0; color: #aaa; }
+
+.task-body { flex: 1; min-width: 0; }
+
+.task-text {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text);
+  word-break: break-word;
+  font-weight: 400;
+}
+
+.task-text.done-text {
+  text-decoration: line-through;
+  color: var(--text3);
+}
+
+/* inline priority editor */
+.p-editor { display: none; align-items: center; gap: 8px; margin-top: 8px; }
+.p-editor.open { display: flex; }
+.p-editor-label { font-size: 11px; color: var(--text3); white-space: nowrap; font-weight: 500; }
+.p-editor input[type="range"] { flex: 1; accent-color: var(--pink); cursor: pointer; }
+.p-val { font-size: 11px; font-weight: 700; color: var(--pink); min-width: 14px; text-align: right; }
+
+/* action buttons */
+.task-actions {
+  display: flex;
+  align-items: flex-start;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity .15s;
+  flex-shrink: 0;
+  padding-top: 1px;
+}
+
+.task:hover .task-actions { opacity: 1; }
+
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: var(--text3);
+  transition: background .12s, color .12s;
+}
+
+.icon-btn:hover { background: var(--pink-soft); color: var(--pink); }
+.icon-btn.del:hover { background: #ffe0e8; color: var(--pink-deep); }
+
+/* footer */
+footer {
+  text-align: center;
+  padding: 0 0 40px;
+  font-size: 12px;
+  color: var(--text3);
+  font-weight: 300;
+  letter-spacing: .3px;
+}
 </style>
 </head>
 <body>
+<div class="wrap">
 
 <header>
-  <h1>Mi lista de tareas</h1>
-  <p>Los datos se guardan automáticamente en tu navegador.</p>
+  <span class="sparkles">✦ ✦ ✦</span>
+  <h1>Mis <em>tareas</em></h1>
+  <p>Todo se guarda automáticamente en tu navegador ✨</p>
 </header>
 
-<div class="add-form">
-  <input type="text" id="new-task" placeholder="Escribe una nueva tarea..." maxlength="200">
-  <button onclick="addTask()">Agregar</button>
+<div class="add-wrap">
+  <div class="add-card">
+    <input type="text" id="new-task" placeholder="¿Qué hay que hacer hoy?" maxlength="200">
+    <div class="priority-pill">
+      <label for="new-priority">P</label>
+      <input type="number" id="new-priority" min="1" max="10" value="5">
+    </div>
+    <button class="add-btn" onclick="addTask()">Agregar</button>
+  </div>
 </div>
 
 <div class="board">
-  <div class="column col-todo" id="col-todo" ondragover="onDragOver(event)" ondrop="onDrop(event,'todo')">
+  <div class="column col-todo" ondragover="onDragOver(event)" ondrop="onDrop(event,'todo')">
     <div class="col-header">
-      <div class="col-title">
-        <div class="col-dot"></div>
-        Por hacer
-      </div>
+      <span class="col-label">Por hacer</span>
       <span class="col-count" id="count-todo">0</span>
     </div>
     <div class="task-list" id="list-todo"></div>
-    <div class="empty-msg" id="empty-todo">Sin tareas aún</div>
+    <div class="empty-msg" id="empty-todo">Nada por aquí… aún</div>
   </div>
 
-  <div class="column col-prog" id="col-prog" ondragover="onDragOver(event)" ondrop="onDrop(event,'progress')">
+  <div class="column col-prog" ondragover="onDragOver(event)" ondrop="onDrop(event,'progress')">
     <div class="col-header">
-      <div class="col-title">
-        <div class="col-dot"></div>
-        En progreso
-      </div>
+      <span class="col-label">En progreso</span>
       <span class="col-count" id="count-progress">0</span>
     </div>
     <div class="task-list" id="list-progress"></div>
-    <div class="empty-msg" id="empty-progress">Nada en curso</div>
+    <div class="empty-msg" id="empty-progress">Todo en pausa por ahora</div>
   </div>
 
-  <div class="column col-done" id="col-done" ondragover="onDragOver(event)" ondrop="onDrop(event,'done')">
+  <div class="column col-done" ondragover="onDragOver(event)" ondrop="onDrop(event,'done')">
     <div class="col-header">
-      <div class="col-title">
-        <div class="col-dot"></div>
-        Hecho
-      </div>
+      <span class="col-label">Hecho</span>
       <span class="col-count" id="count-done">0</span>
     </div>
     <div class="task-list" id="list-done"></div>
-    <div class="empty-msg" id="empty-done">Nada completado aún</div>
+    <div class="empty-msg" id="empty-done">Tus logros aparecerán aquí</div>
   </div>
 </div>
 
-<footer>Hecho con ♥ — datos guardados en este navegador</footer>
+<footer>Hecho con amor y mucho rosa 🩷</footer>
+
+</div><!-- .wrap -->
 
 <script>
-  const COLS = ['todo','progress','done'];
-  let tasks = [];
-  let dragId = null;
+const COLS = ['todo','progress','done'];
+let tasks = [];
+let dragId = null;
+let openPId = null;
 
-  function load() {
-    try { tasks = JSON.parse(localStorage.getItem('tasks') || '[]'); }
-    catch(e) { tasks = []; }
-    render();
-  }
+function load() {
+  try { tasks = JSON.parse(localStorage.getItem('tasks') || '[]'); }
+  catch(e) { tasks = []; }
+  tasks.forEach(t => { if (t.priority == null) t.priority = 5; });
+  render();
+}
 
-  function save() {
-    localStorage.setItem('tasks', JSON.stringify(tasks));
-  }
+function save() { localStorage.setItem('tasks', JSON.stringify(tasks)); }
 
-  function uid() {
-    return Date.now().toString(36) + Math.random().toString(36).slice(2,6);
-  }
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
 
-  function addTask() {
-    const input = document.getElementById('new-task');
-    const text = input.value.trim();
-    if (!text) return;
-    tasks.unshift({ id: uid(), text, status: 'todo', created: Date.now() });
-    input.value = '';
-    save();
-    render();
-    input.focus();
-  }
+function clamp(v) { return Math.min(10, Math.max(1, parseInt(v) || 5)); }
 
-  document.getElementById('new-task').addEventListener('keydown', e => {
-    if (e.key === 'Enter') addTask();
-  });
+function addTask() {
+  const inp = document.getElementById('new-task');
+  const text = inp.value.trim();
+  if (!text) return;
+  const priority = clamp(document.getElementById('new-priority').value);
+  tasks.push({ id: uid(), text, status: 'todo', priority, created: Date.now() });
+  inp.value = '';
+  save(); render();
+  inp.focus();
+}
 
-  function moveTask(id, dir) {
-    const t = tasks.find(t => t.id === id);
-    if (!t) return;
-    const i = COLS.indexOf(t.status);
-    const ni = i + dir;
-    if (ni < 0 || ni >= COLS.length) return;
-    t.status = COLS[ni];
-    save();
-    render();
-  }
+document.getElementById('new-task').addEventListener('keydown', e => {
+  if (e.key === 'Enter') addTask();
+});
 
-  function deleteTask(id) {
-    tasks = tasks.filter(t => t.id !== id);
-    save();
-    render();
-  }
+function moveTask(id, dir) {
+  const t = tasks.find(t => t.id === id);
+  if (!t) return;
+  const i = COLS.indexOf(t.status), ni = i + dir;
+  if (ni < 0 || ni >= COLS.length) return;
+  t.status = COLS[ni];
+  save(); render();
+}
 
-  function render() {
-    COLS.forEach(col => {
-      const list = document.getElementById('list-' + col);
-      const empty = document.getElementById('empty-' + col);
-      const count = document.getElementById('count-' + col);
-      const items = tasks.filter(t => t.status === col);
-      count.textContent = items.length;
-      empty.style.display = items.length ? 'none' : 'block';
-      list.innerHTML = '';
-      items.forEach(t => {
-        const div = document.createElement('div');
-        div.className = 'task';
-        div.draggable = true;
-        div.dataset.id = t.id;
-        div.addEventListener('dragstart', e => { dragId = t.id; div.classList.add('dragging'); });
-        div.addEventListener('dragend', () => div.classList.remove('dragging'));
-        const ci = COLS.indexOf(col);
-        div.innerHTML = `
-          <div class="task-text ${col==='done'?'done-text':''}">${escHtml(t.text)}</div>
-          <div class="task-actions">
-            <div class="move-btns">
-              ${ci > 0 ? `<button class="task-btn" onclick="moveTask('${t.id}',-1)" title="Mover atrás">←</button>` : ''}
-              ${ci < COLS.length-1 ? `<button class="task-btn" onclick="moveTask('${t.id}',1)" title="Mover adelante">→</button>` : ''}
-            </div>
-            <button class="task-btn del" onclick="deleteTask('${t.id}')" title="Eliminar">✕</button>
-          </div>`;
-        list.appendChild(div);
-      });
+function deleteTask(id) {
+  tasks = tasks.filter(t => t.id !== id);
+  save(); render();
+}
+
+function setPriority(id, val) {
+  const t = tasks.find(t => t.id === id);
+  if (!t) return;
+  t.priority = clamp(val);
+  openPId = id;
+  save(); render();
+}
+
+function toggleP(id) {
+  openPId = openPId === id ? null : id;
+  render();
+}
+
+function sorted(items, col) {
+  if (col === 'done') return items;
+  return [...items].sort((a,b) => (b.priority||5) - (a.priority||5));
+}
+
+function chipClass(p, done) {
+  if (done) return 'p-done';
+  if (p >= 8) return 'p-high';
+  if (p >= 4) return 'p-mid';
+  return 'p-low';
+}
+
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function render() {
+  COLS.forEach(col => {
+    const list  = document.getElementById('list-' + col);
+    const empty = document.getElementById('empty-' + col);
+    const count = document.getElementById('count-' + col);
+    const isDone = col === 'done';
+    const items = sorted(tasks.filter(t => t.status === col), col);
+    count.textContent = items.length;
+    empty.style.display = items.length ? 'none' : 'block';
+    list.innerHTML = '';
+    const ci = COLS.indexOf(col);
+
+    items.forEach(t => {
+      const p = t.priority || 5;
+      const isOpen = openPId === t.id;
+      const div = document.createElement('div');
+      div.className = 'task';
+      div.draggable = true;
+      div.dataset.id = t.id;
+      div.addEventListener('dragstart', () => { dragId = t.id; div.classList.add('dragging'); });
+      div.addEventListener('dragend',   () => div.classList.remove('dragging'));
+
+      div.innerHTML = `
+        <div class="chip ${chipClass(p,isDone)}" title="Prioridad ${p}" onclick="toggleP('${t.id}')">${p}</div>
+        <div class="task-body">
+          <div class="task-text ${isDone?'done-text':''}">${esc(t.text)}</div>
+          <div class="p-editor ${isOpen?'open':''}">
+            <span class="p-editor-label">Prioridad</span>
+            <input type="range" min="1" max="10" step="1" value="${p}"
+              oninput="this.nextElementSibling.textContent=this.value"
+              onchange="setPriority('${t.id}',this.value)">
+            <span class="p-val">${p}</span>
+          </div>
+        </div>
+        <div class="task-actions">
+          ${ci > 0 ? `<button class="icon-btn" onclick="moveTask('${t.id}',-1)" title="Atrás">←</button>` : ''}
+          ${ci < 2  ? `<button class="icon-btn" onclick="moveTask('${t.id}',1)"  title="Adelante">→</button>` : ''}
+          <button class="icon-btn del" onclick="deleteTask('${t.id}')" title="Eliminar">✕</button>
+        </div>`;
+      list.appendChild(div);
     });
-  }
+  });
+}
 
-  function escHtml(s) {
-    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
+function onDragOver(e) { e.preventDefault(); }
 
-  function onDragOver(e) { e.preventDefault(); }
+function onDrop(e, col) {
+  e.preventDefault();
+  if (!dragId) return;
+  const t = tasks.find(t => t.id === dragId);
+  if (t) { t.status = col; save(); render(); }
+  dragId = null;
+}
 
-  function onDrop(e, col) {
-    e.preventDefault();
-    if (!dragId) return;
-    const t = tasks.find(t => t.id === dragId);
-    if (t) { t.status = col; save(); render(); }
-    dragId = null;
-  }
-
-  load();
+load();
 </script>
 </body>
 </html>
